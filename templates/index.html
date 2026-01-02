@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% block pagetitle %}
+LeafLens - AI Engine
+{% endblock pagetitle %}
+
+{% block body %}
+<style>
+    .upload-section {
+        background: var(--bg-secondary);
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 15px 50px var(--shadow);
+        border: 1px solid var(--border-color);
+        margin: 1rem 0;
+    }
+
+    .info-card {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+        border-radius: 15px;
+        padding: 1.5rem;
+        border: 1px solid var(--border-color);
+        height: 100%;
+    }
+
+    .upload-area {
+        border: 2px dashed var(--border-color);
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        background: var(--bg-primary);
+        cursor: pointer;
+    }
+
+    .upload-area:hover {
+        border-color: var(--accent-primary);
+        background: var(--bg-secondary);
+        transform: scale(1.02);
+    }
+
+    .upload-area.dragover {
+        border-color: var(--accent-primary);
+        background: rgba(16, 185, 129, 0.1);
+    }
+
+    .upload-icon {
+        font-size: 2.5rem;
+        color: var(--accent-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .file-name-display {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: var(--bg-secondary);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-weight: 500;
+        border: 1px solid var(--border-color);
+    }
+</style>
+
+<div class="container">
+    <div class="text-center mb-3 fade-in">
+        <h1 class="h3 fw-bold mb-2" data-aos="fade-up">
+            <span class="gradient-text">AI Disease Detection Engine</span>
+        </h1>
+        <p style="color: var(--text-secondary); font-size: 0.95rem;" data-aos="fade-up" data-aos-delay="100">
+            Upload your plant's leaf image and let our AI analyze it
+        </p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 mb-4" data-aos="fade-right">
+            <div class="info-card">
+                <h5 class="fw-bold mb-3">
+                    <i class="fas fa-question-circle me-2" style="color: var(--accent-primary);"></i>
+                    Why Detect Plant Diseases?
+                </h5>
+                <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.9rem;">
+                    Plant diseases significantly impact crop health and yield. Early detection is crucial for:
+                </p>
+                <ul style="color: var(--text-secondary); line-height: 1.8; font-size: 0.9rem; padding-left: 1.2rem;">
+                    <li><i class="fas fa-check-circle me-2" style="color: var(--accent-primary); font-size: 0.8rem;"></i>Preventing crop losses</li>
+                    <li><i class="fas fa-check-circle me-2" style="color: var(--accent-primary); font-size: 0.8rem;"></i>Reducing treatment costs</li>
+                    <li><i class="fas fa-check-circle me-2" style="color: var(--accent-primary); font-size: 0.8rem;"></i>Improving food security</li>
+                    <li><i class="fas fa-check-circle me-2" style="color: var(--accent-primary); font-size: 0.8rem;"></i>Optimizing agricultural productivity</li>
+                </ul>
+                <p style="color: var(--text-secondary); line-height: 1.6; margin-top: 1rem; font-size: 0.9rem;">
+                    Our AI-powered system provides accurate diagnosis even before symptoms become clearly visible, 
+                    enabling proactive disease management.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4" data-aos="fade-left">
+            <div class="upload-section">
+                <h5 class="text-center mb-3 fw-bold">
+                    <i class="fas fa-cloud-upload-alt me-2" style="color: var(--accent-primary);"></i>
+                    Upload Plant Image
+                </h5>
+                
+                <form action="/submit" method="POST" enctype="multipart/form-data" id="uploadForm">
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-image upload-icon"></i>
+                        <h6 class="mb-2">Drag & Drop or Click to Upload</h6>
+                        <p style="color: var(--text-secondary); font-size: 0.85rem;">Supported formats: JPG, PNG, JPEG</p>
+                        <input type="file" id="actual-btn" name="image" accept="image/*" hidden required>
+                    </div>
+                    
+                    <div id="fileDisplay" class="file-name-display" style="display: none;">
+                        <i class="fas fa-file-image me-2"></i>
+                        <span id="file-chosen">No file chosen</span>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn-modern" id="submitBtn">
+                            <i class="fas fa-search me-2"></i>Analyze Image
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const actualBtn = document.getElementById('actual-btn');
+    const fileChosen = document.getElementById('file-chosen');
+    const uploadArea = document.getElementById('uploadArea');
+    const fileDisplay = document.getElementById('fileDisplay');
+    const submitBtn = document.getElementById('submitBtn');
+    const uploadForm = document.getElementById('uploadForm');
+
+    // Click to upload
+    uploadArea.addEventListener('click', () => {
+        actualBtn.click();
+    });
+
+    // File selection
+    actualBtn.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            fileChosen.textContent = this.files[0].name;
+            fileDisplay.style.display = 'block';
+            uploadArea.style.borderColor = 'var(--accent-primary)';
+            uploadArea.style.background = 'rgba(16, 185, 129, 0.1)';
+        }
+    });
+
+    // Drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            actualBtn.files = e.dataTransfer.files;
+            fileChosen.textContent = e.dataTransfer.files[0].name;
+            fileDisplay.style.display = 'block';
+            uploadArea.style.borderColor = 'var(--accent-primary)';
+            uploadArea.style.background = 'rgba(16, 185, 129, 0.1)';
+        }
+    });
+
+    // Form submission
+    uploadForm.addEventListener('submit', function(e) {
+        if (!actualBtn.files || !actualBtn.files[0]) {
+            e.preventDefault();
+            alert('Please select an image first!');
+            return;
+        }
+        
+        submitBtn.innerHTML = '<span class="loading"></span> Analyzing...';
+        submitBtn.disabled = true;
+    });
+</script>
+
+{% endblock body %}

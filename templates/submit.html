@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% block pagetitle %}
+LeafLens - {{title}}
+{% endblock pagetitle %}
+
+{% block body %}
+<style>
+    .result-header {
+        text-align: center;
+        margin: 1rem 0;
+        padding: 1rem;
+        background: var(--gradient-green);
+        border-radius: 15px;
+        color: white;
+    }
+
+    .result-image-container {
+        text-align: center;
+        margin: 1rem 0;
+    }
+
+    .result-image {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 15px;
+        box-shadow: 0 15px 40px var(--shadow);
+        border: 2px solid var(--accent-primary);
+    }
+
+    .info-section {
+        margin: 1rem 0;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--accent-primary);
+        display: inline-block;
+    }
+
+    .supplement-card {
+        text-align: center;
+        padding: 1.25rem;
+        background: var(--bg-secondary);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px var(--shadow);
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+    }
+
+    .supplement-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px var(--shadow);
+    }
+
+    .supplement-image {
+        width: 150px;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin: 0.5rem 0;
+        box-shadow: 0 5px 15px var(--shadow);
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .status-healthy {
+        background: var(--gradient-green);
+        color: white;
+    }
+
+    .status-diseased {
+        background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+        color: white;
+    }
+</style>
+
+<div class="container">
+    <div class="result-header fade-in" data-aos="fade-down">
+        <h2 class="h4 fw-bold mb-2">{{title}}</h2>
+        {% if pred==3 or pred==5 or pred==7 or pred==11 or pred==15 or pred==18 or pred==20 or pred==23 or pred==24 or pred==25 or pred==28 or pred==38 %}
+        <span class="status-badge status-healthy">
+            <i class="fas fa-check-circle me-2"></i>Healthy Plant
+        </span>
+        {% else %}
+        <span class="status-badge status-diseased">
+            <i class="fas fa-exclamation-triangle me-2"></i>Disease Detected
+        </span>
+        {% endif %}
+    </div>
+
+    <div class="result-image-container" data-aos="zoom-in">
+        <img src="{{image_url}}" alt="{{title}}" class="result-image">
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 mb-4" data-aos="fade-right">
+            <div class="card-modern info-section">
+                <h5 class="section-title">
+                    <i class="fas fa-info-circle me-2" style="color: var(--accent-primary);"></i>
+                    {% if pred==3 or pred==5 or pred==7 or pred==11 or pred==15 or pred==18 or pred==20 or pred==23 or pred==24 or pred==25 or pred==28 or pred==38 %}
+                    Tips to Grow Healthy Plants
+                    {% else %}
+                    Disease Description
+                    {% endif %}
+                </h5>
+                <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.9rem;">
+                    {{desc}}
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4" data-aos="fade-left">
+            <div class="card-modern info-section">
+                <h5 class="section-title">
+                    <i class="fas fa-shield-alt me-2" style="color: var(--accent-primary);"></i>
+                    {% if pred==3 or pred==5 or pred==7 or pred==11 or pred==15 or pred==18 or pred==20 or pred==23 or pred==24 or pred==25 or pred==28 or pred==38 %}
+                    Benefits
+                    {% else %}
+                    Prevention Steps
+                    {% endif %}
+                </h5>
+                <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.9rem;">
+                    {{prevent}}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {% if pred!=4 %}
+    <div class="row">
+        <div class="col-lg-6 mx-auto mb-4" data-aos="fade-up">
+            <div class="supplement-card">
+                <h5 class="section-title">
+                    <i class="fas fa-pills me-2" style="color: var(--accent-primary);"></i>
+                    {% if pred==3 or pred==5 or pred==7 or pred==11 or pred==15 or pred==18 or pred==20 or pred==23 or pred==24 or pred==25 or pred==28 or pred==38 %}
+                    Recommended Fertilizer
+                    {% else %}
+                    Recommended Supplements
+                    {% endif %}
+                </h5>
+                <img src="{{simage}}" alt="{{sname}}" class="supplement-image">
+                <h6 class="fw-bold mt-2 mb-2">{{sname}}</h6>
+                <a target="_blank" href="{{buy_link}}" class="btn-modern">
+                    <i class="fas fa-shopping-cart me-2"></i>Buy Product
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="text-center mt-3 mb-3">
+        <a href="/index" class="btn-gradient-1">
+            <i class="fas fa-redo me-2"></i>Analyze Another Image
+        </a>
+    </div>
+</div>
+
+{% endblock body %}
