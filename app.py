@@ -61,6 +61,10 @@ def ai_engine_page():
     return render_template('index.html')
     #comment
 
+@app.route('/support')
+def ai_engine_page():
+    return render_template('support.html')
+    
 @app.route('/mobile-device')
 def mobile_device_detected_page():
     return render_template('mobile-device.html')
